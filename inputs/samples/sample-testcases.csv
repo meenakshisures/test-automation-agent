@@ -1,0 +1,13 @@
+TestID,Title,Preconditions,Steps,Test Data,Expected Result
+TC-201,Assembly page lists the expected columns,User is signed in,"1. Open the Assembly page","","The 'All Breakers in Assembly' heading is visible and the table shows columns Production Order, Breaker Type, Current Rating, Control Voltage, Customer, Status"
+TC-202,Testing page lists the expected columns,User is signed in,"1. Open the Testing page","","The 'All Breakers in Testing' heading is visible and the table shows columns Production Order, Breaker Type, Control Voltage, Current Rating, Customer Name, Testing Status"
+TC-203,Reports submenu expands in the sidebar,User is signed in on the dashboard,"1. Open the Dashboard
+2. Click the expand arrow next to Reports in the sidebar","","The Reports submenu opens and shows links 'Test Reports' and 'Labor Hours Summary Reports'"
+TC-204,Create New Order opens the package upload dialog,User is signed in,"1. Open the Production Orders page
+2. Click 'Create New Order'","","The 'Create New Production Order' dialog is visible and its Submit button is disabled until a ZIP is uploaded"
+TC-205,Create New Order dialog can be closed,User is signed in,"1. Open the Production Orders page
+2. Click 'Create New Order'
+3. Click Close in the dialog","","The 'Create New Production Order' dialog is no longer visible"
+TC-206,Lookup can switch to search by customer name,User is signed in,"1. Open the Lookup page
+2. Select 'Look Up by Customer Name'","","The 'Look Up by Customer Name' option is selected and 'Look Up by Production Order #' is not selected"
+TC-207,Settings lists its configuration sections,User is signed in,"1. Open the Settings page","","The Settings menu shows User Management, Roles and Permissions, Assembly Configuration and Testing Configuration"

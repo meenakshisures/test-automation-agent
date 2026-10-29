@@ -1,0 +1,21 @@
+{
+  "testId": "TC-002",
+  "title": "Sidebar navigates to Production Orders",
+  "source": "csv",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User is signed in on the dashboard"
+  ],
+  "steps": [
+    "Click 'Production Orders' in the sidebar"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "The URL is /productionOrders and the 'All Production Orders' heading and orders table are visible"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}

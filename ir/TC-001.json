@@ -1,0 +1,21 @@
+{
+  "testId": "TC-001",
+  "title": "Signed-in user lands on the dashboard",
+  "source": "csv",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User has signed in with Microsoft SSO"
+  ],
+  "steps": [
+    "Open the Dashboard page"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "The Dashboard heading and the Operational Analytics section are visible"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}

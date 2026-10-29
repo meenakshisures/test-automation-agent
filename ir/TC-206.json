@@ -1,0 +1,22 @@
+{
+  "testId": "TC-206",
+  "title": "Lookup can switch to search by customer name",
+  "source": "csv",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User is signed in"
+  ],
+  "steps": [
+    "Open the Lookup page",
+    "Select 'Look Up by Customer Name'"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "The 'Look Up by Customer Name' option is selected and 'Look Up by Production Order #' is not selected"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}

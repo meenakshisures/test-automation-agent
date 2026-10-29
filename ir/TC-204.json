@@ -1,0 +1,22 @@
+{
+  "testId": "TC-204",
+  "title": "Create New Order opens the package upload dialog",
+  "source": "csv",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User is signed in"
+  ],
+  "steps": [
+    "Open the Production Orders page",
+    "Click 'Create New Order'"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "The 'Create New Production Order' dialog is visible and its Submit button is disabled until a ZIP is uploaded"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}

@@ -1,0 +1,25 @@
+{
+  "testId": "TC-004",
+  "title": "Look Up button is disabled until an order number is entered",
+  "source": "csv",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User is signed in"
+  ],
+  "steps": [
+    "Open the Lookup page",
+    "Observe the Look Up button",
+    "Enter a 7-digit production order number"
+  ],
+  "testData": {
+    "order": "1234567"
+  },
+  "expected": [
+    {
+      "description": "The Look Up button is disabled while the field is empty and becomes enabled after a 7-digit number is entered"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}

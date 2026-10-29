@@ -1,0 +1,26 @@
+{
+  "testId": "PR-003",
+  "title": "Verify that the Look Up page offers three search modes: production order, purchase order and customer name",
+  "source": "prompt",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User is signed in"
+  ],
+  "steps": [
+    "Open the Lookup page"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "Radio options for production order, purchase order and customer name are visible"
+    },
+    {
+      "description": "Production order is selected by default"
+    }
+  ],
+  "tags": [
+    "lookup"
+  ],
+  "needsClarification": false
+}

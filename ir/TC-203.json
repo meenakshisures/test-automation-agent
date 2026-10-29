@@ -1,0 +1,22 @@
+{
+  "testId": "TC-203",
+  "title": "Reports submenu expands in the sidebar",
+  "source": "csv",
+  "app": "meiden",
+  "priority": "medium",
+  "preconditions": [
+    "User is signed in on the dashboard"
+  ],
+  "steps": [
+    "Open the Dashboard",
+    "Click the expand arrow next to Reports in the sidebar"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "The Reports submenu opens and shows links 'Test Reports' and 'Labor Hours Summary Reports'"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}
