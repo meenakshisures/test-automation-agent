@@ -1,0 +1,24 @@
+TestID,Title,Preconditions,Steps,Test Data,Expected Result
+TC-101,Register with valid details,User is on the registration page,"1. Enter the full name
+2. Enter the email
+3. Enter the password
+4. Confirm the password
+5. Tick the Terms checkbox
+6. Click Register","name=Asha Rao; email=asha.rao@example.com; password=Str0ngPass!; confirm=Str0ngPass!","The user is redirected to the welcome page; The message 'Registration successful' is displayed"
+TC-102,Registration fails when the email is already registered,User is on the registration page,"1. Enter the full name
+2. Enter an already registered email
+3. Enter and confirm the password
+4. Tick the Terms checkbox
+5. Click Register","name=Asha Rao; email=existing@example.com; password=Str0ngPass!","The error 'Email already registered' is displayed; The user stays on the registration page"
+TC-103,Mismatched passwords show an error,User is on the registration page,"1. Enter the password
+2. Enter a different value in Confirm password
+3. Click Register","password=Str0ngPass!; confirm=Different1!",The error 'Passwords do not match' is displayed next to the Confirm password field
+TC-104,A short password is rejected,User is on the registration page,"1. Enter the password
+2. Click Register",password=123,The error 'Password must be at least 8 characters' is displayed
+TC-105,Empty required fields show validation errors,User is on the registration page,"1. Leave all fields empty
+2. Click Register",,"The error 'Name is required' is displayed; The error 'Email is required' is displayed; The error 'Password is required' is displayed"
+TC-106,Register button stays disabled until Terms are accepted,User is on the registration page,"1. Observe the Register button
+2. Tick the Terms checkbox",,"The Register button is disabled before the checkbox is ticked; The Register button is enabled after the checkbox is ticked"
+TC-107,Registration page looks right,User is on the registration page,"1. Open the registration page",,Everything is correct
+TC-108,Show or hide the password,User is on the registration page,"1. Enter a password
+2. Click the show password icon",password=Str0ngPass!,

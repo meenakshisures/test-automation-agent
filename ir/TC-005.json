@@ -1,0 +1,27 @@
+{
+  "testId": "TC-005",
+  "title": "Searching filters the product list",
+  "source": "csv",
+  "app": "app",
+  "priority": "medium",
+  "preconditions": [
+    "User is logged in and on the products page"
+  ],
+  "steps": [
+    "Type 'bike' in the search box",
+    "Press Enter"
+  ],
+  "testData": {
+    "query": "bike"
+  },
+  "expected": [
+    {
+      "description": "Only products whose name contains 'bike' are listed"
+    },
+    {
+      "description": "The result count text is visible"
+    }
+  ],
+  "tags": [],
+  "needsClarification": false
+}

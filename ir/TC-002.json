@@ -1,19 +1,27 @@
 {
   "testId": "TC-002",
-  "title": "Sidebar navigates to Production Orders",
+  "title": "Login fails with an invalid password",
   "source": "csv",
-  "app": "meiden",
+  "app": "app",
   "priority": "medium",
   "preconditions": [
-    "User is signed in on the dashboard"
+    "User is on the login page"
   ],
   "steps": [
-    "Click 'Production Orders' in the sidebar"
+    "Enter a valid username",
+    "Enter an invalid password",
+    "Click Login"
   ],
-  "testData": {},
+  "testData": {
+    "username": "demo_user",
+    "password": "wrong_password"
+  },
   "expected": [
     {
-      "description": "The URL is /productionOrders and the 'All Production Orders' heading and orders table are visible"
+      "description": "An error message 'Invalid username or password' is displayed"
+    },
+    {
+      "description": "The user stays on the login page"
     }
   ],
   "tags": [],

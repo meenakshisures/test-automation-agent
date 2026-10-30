@@ -1,15 +1,22 @@
+// Generated from IR: TC-001 (source: ir/TC-001.json). Not run against an app.
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../app-model/pages/LoginPage';
+import { LoginPage } from '../pages/LoginPage';
+import { ProductsPage } from '../pages/ProductsPage';
 
-// Opt out of the saved session: this spec exercises the signed-out experience.
-test.use({ storageState: { cookies: [], origins: [] } });
+test('TC-001 Login succeeds with valid credentials', async ({ page }) => {
+  const username = process.env.TEST_USERNAME;
+  const password = process.env.TEST_PASSWORD;
 
-/** Generated from IR: PR-001. */
-test('PR-001 Unauthenticated user sees Sign in with Microsoft on the login page', async ({ page }) => {
-  const login = new LoginPage(page);
-  await login.goto();
+  if (!username || !password) {
+    throw new Error('Set TEST_USERNAME and TEST_PASSWORD to run this login test.');
+  }
 
-  await expect(login.heading).toBeVisible();
-  await expect(login.signInWithMicrosoft).toBeVisible();
-  await expect(login.signInWithMicrosoft).toBeEnabled();
+  const loginPage = new LoginPage(page);
+  const productsPage = new ProductsPage(page);
+
+  await page.goto('/login');
+  await loginPage.login(username, password);
+
+  await expect(productsPage.heading).toBeVisible();
+  await expect(productsPage.productList).toBeVisible();
 });

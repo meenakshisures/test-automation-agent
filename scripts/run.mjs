@@ -1,28 +1,23 @@
 #!/usr/bin/env node
 /**
- * Orchestrator (the deterministic backbone of the agent's pipeline):
- *   parse inputs -> run Playwright -> generate report.
- *
- * The LLM-driven stages (normalize prompts, generate new specs, analyze+heal
- * failures) are performed by the test-author subagent via its skills; this
- * script is the plumbing those stages hang off, and runs the parts that must
- * be deterministic. Non-zero exit if any test failed (so CI fails honestly).
+ * Deterministic backbone of the pipeline: parse inputs -> validate generated scripts -> report.
+ * The LLM-driven stages (normalize prompts, write Page Objects + specs, fix validation failures) are
+ * done by the test-author agent in Copilot Chat between `parse` and `validate`.
+ * Exit code is non-zero if any script is invalid or missing (so CI fails honestly).
  */
 import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const step = (label, cmd, args) => {
-  console.log(`\n── ${label} ──`);
-  const r = spawnSync(cmd, args, { cwd: ROOT, stdio: 'inherit', shell: process.platform === 'win32' });
-  return r.status ?? 1;
+const step = (label, args) => {
+  console.log(`\n-- ${label} --`);
+  return spawnSync('node', args, { cwd: ROOT, stdio: 'inherit' }).status ?? 1;
 };
 
-step('1/3  Parse inputs -> IR', 'node', ['scripts/parse.mjs']);
-// Tests may fail — that is expected input to the report, so don't abort here.
-const testStatus = step('2/3  Execute Playwright specs', 'npx', ['playwright', 'test']);
-step('3/3  Generate Markdown report', 'node', ['scripts/report.mjs']);
+step('1/3  Parse inputs -> IR', ['scripts/parse.mjs', ...process.argv.slice(2)]);
+const status = step('2/3  Validate generated scripts', ['scripts/validate.mjs']);
+step('3/3  Report', ['scripts/report.mjs']);
 
-console.log(`\nDone. See reports/report.md (and \`npm run report:open\` for the HTML report).`);
-process.exit(testStatus === 0 ? 0 : 1);
+console.log('\nDone. Open reports/report.html');
+process.exit(status === 0 ? 0 : 1);

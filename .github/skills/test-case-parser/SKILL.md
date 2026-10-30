@@ -1,32 +1,31 @@
 ---
 name: test-case-parser
-description: Normalize free-text prompts and CSV test cases into the canonical Test Case IR (ir/schema.json). Use before generating any Playwright code.
+description: Normalize CSV rows (or free-text prompts) into the canonical Test Case IR in ir/. Use before generating any Playwright code. Asks the user when a step or expected result is ambiguous.
 ---
 
 # Test case parser
 
-Turn any input into one validated IR object per test case. The deterministic
-`scripts/parse.mjs` handles CSV and stubs prompts; you finish the LLM part.
+Turn any input into one validated IR object per test case. The deterministic `scripts/parse.mjs`
+does the CSV work; you finish anything it could not.
 
 ## Steps
 
-1. Run `npm run parse` (defaults: `inputs/testcases.csv`, `inputs/prompts.txt`, `inputs/*.pdf`)
-   or `npm run parse -- path/to/file.csv|pdf|txt` for one specific file. CSV rows become
-   complete IR files; prompt lines and PDF test-case blocks become stubs with
-   `needsLlmNormalization: true`. PDF stubs keep the original text in `rawText` (full extracted
-   text is in `inputs/extracted/`); normalize from that, and do not invent anything it lacks.
-2. For each stub (and any CSV IR with `needsClarification: true`):
-   - Infer `preconditions`, decompose `steps` into discrete user actions, and
-     extract `testData` as key/value pairs.
-   - Rewrite `expected` as one or more **assertable** statements. Each must be
-     checkable with a Playwright assertion (visible text, URL, count, state).
-   - Set `needsLlmNormalization`/`needsClarification` back to false once done.
-3. **Ambiguity gate.** If a step or expected result cannot be made assertable
-   without guessing (e.g. "verify it works"), set `needsClarification: true`,
-   add specific `clarificationQuestions`, and ask the user before proceeding.
-   Do not fabricate expected results.
+1. Run `npm run parse` (reads `inputs/testcases.csv`, `inputs/prompts.txt`, `inputs/*.pdf`) or
+   `npm run parse -- path/to/file.csv` for one file. Expected CSV columns:
+   `TestID, Title, Preconditions, Steps, Test Data, Expected Result` (extra columns such as Priority or
+   Tags are kept). Steps and expected results may be one per line, numbered, or separated by `;`.
+2. CSV rows become complete `ir/<id>.json`. Prompt lines and PDF blocks become stubs with
+   `needsLlmNormalization: true`: infer `preconditions`, split `steps` into single user actions,
+   extract `testData` as key/value, and rewrite `expected` as assertable statements. Then set the flag false.
+3. **Ambiguity gate.** The parser sets `needsClarification: true` with `clarificationQuestions` when
+   steps are missing or an expected result cannot be asserted ("it works", "is correct", empty).
+   For those cases **ask the user the listed questions**. Do not guess, and do not generate a script
+   until answered. Keep processing the other cases.
+   When the user answers, update the CSV row (or the IR), set `needsClarification` false and re-run.
+
+## Assertable means
+Checkable with a Playwright assertion: visible/hidden text or element, URL, count, value, enabled/disabled,
+checked state. Each `expected` entry maps to at least one `expect()`.
 
 ## Validate
-
-Every IR must conform to `ir/schema.json`: required `testId`, `title`, `source`,
-non-empty `steps`, and non-empty `expected`.
+Every IR must conform to `ir/schema.json`: `testId`, `title`, `source`, non-empty `steps`, non-empty `expected`.

@@ -1,24 +1,21 @@
 ---
 name: report-generator
-description: Aggregate a run into a per-test-case report (Markdown + Playwright HTML) with status, reasons, and artifact links. Use as the final step.
+description: Build the consolidated validation report (HTML + Markdown) with per-case status, reasons, steps, expected results and the generated script. Use as the final step.
 ---
 
 # Report generator
 
-Deterministic. One status per test case, with the reason attached — nothing
-silently skipped.
+Deterministic. One status per test case with the reason attached; nothing silently skipped.
 
 ## Run
-
-- `npm run report` reads `reports/results.json` and writes `reports/report.md`:
-  pass rate, a per-case status table, and a failure-detail section with reasons
-  and artifact paths.
-- `npm run report:open` opens the Playwright HTML report (traces, steps, video).
+`npm run report` reads `reports/validation.json` and writes:
+- `reports/report.html`: open this. Summary tiles, filters, and a card per case (steps, expected,
+  checks, questions for the user, generated script).
+- `reports/report.md`: the same as Markdown.
 
 ## Summarize for the user
-
 State plainly:
-- `X/Y passed (Z%)` against the agreed target,
-- each failure with its classified reason,
-- anything the agent flagged as a real app bug (not an automation defect),
-- any test left unresolved after the retry budget.
+- `X/Y clear cases valid` (valid scripts / cases clear enough to generate), plus the count awaiting clarification,
+- each invalid case and its failing check,
+- every open question, quoted,
+- that the scripts were **validated statically and not executed**, so locators are unverified.

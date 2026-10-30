@@ -1,19 +1,23 @@
 {
   "testId": "TC-003",
-  "title": "Production Orders table shows the expected columns",
+  "title": "Login with an empty username shows a validation error",
   "source": "csv",
-  "app": "meiden",
+  "app": "app",
   "priority": "medium",
   "preconditions": [
-    "User is signed in"
+    "User is on the login page"
   ],
   "steps": [
-    "Open the Production Orders page"
+    "Leave the username empty",
+    "Enter a password",
+    "Click Login"
   ],
-  "testData": {},
+  "testData": {
+    "password": "Passw0rd!"
+  },
   "expected": [
     {
-      "description": "The table shows columns Production Order, Breaker Type, Control Voltage, Current Rating, Customer, Created By, Status"
+      "description": "An error message 'Username is required' is displayed"
     }
   ],
   "tags": [],

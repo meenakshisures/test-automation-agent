@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 try { process.loadEnvFile(); } catch {}
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const IR_DIR = join(ROOT, 'ir');
-const APP = process.env.APP || 'meiden';
+const APP = process.env.APP || 'app';
 
 mkdirSync(IR_DIR, { recursive: true });
 
@@ -76,6 +76,21 @@ function parseData(s) {
   return out;
 }
 
+/** An expected result that cannot be turned into an assertion ("it works", "is correct"). */
+const VAGUE = /^(it|this|that|everything|the (page|app|feature|system))?\s*(should\s+)?(works?|is working|is ok(ay)?|is fine|is correct|is right|succeeds|passes|behaves (correctly|properly))\.?$/i;
+
+function clarificationsFor(id, steps, expected) {
+  const q = [];
+  if (!steps.length) q.push(`${id}: no steps given. What does the user do?`);
+  if (!expected.length) q.push(`${id}: no expected result given. What should be true afterwards?`);
+  for (const e of expected) {
+    if (VAGUE.test(e.description.trim())) {
+      q.push(`${id}: "${e.description}" cannot be checked. What exactly should the user see (text, URL, element, count)?`);
+    }
+  }
+  return q;
+}
+
 function csvToIr(rows) {
   const headers = rows[0].map(normKey).map((k) => HEADER_MAP[k] || k);
   const records = [];
@@ -84,18 +99,22 @@ function csvToIr(rows) {
     headers.forEach((h, c) => (rec[h] = (rows[r][c] ?? '').trim()));
 
     const expected = splitList(rec.expected).map((d) => ({ description: d }));
+    const testId = rec.testId || `TC-${String(r).padStart(3, '0')}`;
+    const steps = splitList(rec.steps);
+    const questions = clarificationsFor(testId, steps, expected);
     records.push({
-      testId: rec.testId || `TC-${String(r).padStart(3, '0')}`,
+      testId,
       title: rec.title || '(untitled)',
       source: 'csv',
       app: APP,
       priority: (rec.priority || 'medium').toLowerCase(),
       preconditions: splitList(rec.preconditions),
-      steps: splitList(rec.steps),
+      steps: steps.length ? steps : ['(no steps provided)'],
       testData: parseData(rec.testData),
       expected: expected.length ? expected : [{ description: '(no expected result provided)' }],
       tags: splitList(rec.tags),
-      needsClarification: expected.length === 0,
+      needsClarification: questions.length > 0,
+      ...(questions.length ? { clarificationQuestions: questions } : {}),
     });
   }
   return records;

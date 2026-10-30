@@ -1,12 +1,7 @@
 node_modules/
 .env
 artifacts/
-reports/html/
-reports/results.json
 test-results/
 playwright-report/
+reports/
 *.log
-.auth/
-reports/evidence/
-reports/report.html
-reports/report.md

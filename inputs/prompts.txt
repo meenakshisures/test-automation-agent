@@ -1,7 +1,0 @@
-# One test intent per line. Blank lines and lines starting with # are ignored.
-# These are deliberately free-text; the test-case-parser skill (LLM) normalizes them into IR.
-
-Verify that an unauthenticated user sees the Sign in with Microsoft button on the login page
-Verify that the Settings page shows the Users section with a search box and an Add New User button
-Verify that the Look Up page offers three search modes: production order, purchase order and customer name
-Verify that the Production Orders page has a Create New Order button

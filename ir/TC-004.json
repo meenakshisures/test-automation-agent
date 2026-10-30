@@ -1,23 +1,22 @@
 {
   "testId": "TC-004",
-  "title": "Look Up button is disabled until an order number is entered",
+  "title": "Adding an item updates the cart badge",
   "source": "csv",
-  "app": "meiden",
+  "app": "app",
   "priority": "medium",
   "preconditions": [
-    "User is signed in"
+    "User is logged in and on the products page"
   ],
   "steps": [
-    "Open the Lookup page",
-    "Observe the Look Up button",
-    "Enter a 7-digit production order number"
+    "Click 'Add to cart' on the Backpack",
+    "Observe the cart icon"
   ],
   "testData": {
-    "order": "1234567"
+    "item": "Backpack"
   },
   "expected": [
     {
-      "description": "The Look Up button is disabled while the field is empty and becomes enabled after a 7-digit number is entered"
+      "description": "The cart badge shows 1"
     }
   ],
   "tags": [],

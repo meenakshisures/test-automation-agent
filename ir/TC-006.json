@@ -1,0 +1,24 @@
+{
+  "testId": "TC-006",
+  "title": "Checkout works",
+  "source": "csv",
+  "app": "app",
+  "priority": "medium",
+  "preconditions": [
+    "User has items in the cart"
+  ],
+  "steps": [
+    "Go to checkout"
+  ],
+  "testData": {},
+  "expected": [
+    {
+      "description": "It works"
+    }
+  ],
+  "tags": [],
+  "needsClarification": true,
+  "clarificationQuestions": [
+    "TC-006: \"It works\" cannot be checked. What exactly should the user see (text, URL, element, count)?"
+  ]
+}

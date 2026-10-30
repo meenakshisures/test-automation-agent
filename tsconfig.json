@@ -10,5 +10,5 @@
     "noEmit": true,
     "types": ["@playwright/test", "node"]
   },
-  "include": ["tests", "app-model", "auth", "playwright.config.ts"]
+  "include": ["tests", "pages", "playwright.config.ts"]
 }

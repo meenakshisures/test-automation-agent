@@ -1,25 +1,29 @@
 # Repo instructions (GitHub Copilot)
 
-This repo is a Playwright (TypeScript) test-automation POC for the Meiden Switchgear dashboard.
-Pipeline: `inputs/` -> `ir/*.json` -> `app-model/` Page Objects -> `tests/*.spec.ts` -> `reports/`.
-Use the `test-author` custom agent for generating tests; skills live in `.github/skills/`.
+This repo is a Playwright (TypeScript) test-script generator. Input is a CSV of test cases
+(`TestID, Title, Preconditions, Steps, Test Data, Expected Result`); output is Playwright specs with
+Page Objects, a static validation, and a report. There is **no live app**: scripts are generated and
+validated statically, not executed. Use the `test-author` custom agent; skills are in `.github/skills/`.
 
-## Conventions
-- Tests import `{ test, expect }` from `./fixtures` (restores sessionStorage for the SSO session).
-  Only specs that test the signed-out experience import from `@playwright/test` and set
-  `test.use({ storageState: { cookies: [], origins: [] } })`.
-- Tests drive Page Objects in `app-model/pages/`; no raw selectors in specs.
-- The app has no `data-test` attributes: use `getByRole` / `getByLabel` / `getByText`.
+Pipeline: `inputs/` -> `ir/*.json` -> `pages/*.ts` + `tests/*.spec.ts` -> `reports/validation.json` -> `reports/report.html`.
+
+## Conventions for generated code
+- Specs import `{ test, expect }` from `@playwright/test` and drive Page Objects in `pages/`; no raw
+  selectors in specs.
+- One `test()` per test case, titled `TC-001 <title>` (the id first). Group related cases in `test.describe`.
+- At least one `expect()` per IR `expected` entry, inside the `test()` body (not hidden in a helper).
+- Locators come from the wording of the steps, in this order: `getByRole` (+ name), `getByLabel`,
+  `getByPlaceholder`, `getByText`, `getByTestId`. Never CSS chains or XPath.
+- Use relative URLs (`page.goto('/login')`); the base URL comes from `BASE_URL` in `.env`.
 - Never use `waitForTimeout`; rely on web-first assertions.
-- The app shows an auth-bootstrap spinner for 10-15s after load, so a Page Object `goto()` must
-  wait for its first heading with `{ timeout: 45_000 }`.
-- Every IR `expected` entry needs at least one `expect()`.
+- Page Object header comment must say `UNVERIFIED: locators inferred from the test case wording`.
+- Test data comes from the CSV `Test Data` column; use `process.env` for anything secret.
 
-## Auth
-Sign-in is Microsoft Entra ID SSO, handled once by `tests/auth.setup.ts` -> `auth/microsoft-login.ts`
-and saved to `.auth/`. MFA: set `MFA_TOTP_SECRET` in `.env` (automatic) or run headed and approve
-manually. Credentials come from `.env` (`TEST_USERNAME`, `TEST_PASSWORD`); never hard-code them.
+## Rules
+- Ambiguous steps or expected results: ask the user, do not guess.
+- Never remove or weaken an assertion to make validation pass.
+- Report honestly: scripts were validated statically, not executed.
 
 ## Commands
-`npm run agent` (parse + test + report) · `npm test` · `npm run test:headed` · `npm run report:open`
-· `npx tsc --noEmit` (must pass before running specs).
+`npm run agent` (parse + validate + report) · `npm run parse -- <csv>` · `npm run validate` ·
+`npm run report` · `npm run test:list` · `npx tsc --noEmit`

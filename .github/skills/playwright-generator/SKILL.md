@@ -1,31 +1,27 @@
 ---
 name: playwright-generator
-description: Generate TypeScript Playwright specs from Test Case IR using the grounded Page Objects and team coding standards. Use after parsing and grounding, before execution.
+description: Generate TypeScript Playwright specs from clear Test Case IR using the Page Objects and the team coding standards. Use after parsing and Page Object building, before validation.
 ---
 
 # Playwright generator
 
-Produce a reviewable spec per IR. Code against Page Objects, never raw selectors.
+Produce a reviewable spec per clear IR. Code against Page Objects, never raw selectors.
 
 ## Output contract
-
-- One file under `tests/`, grouped by feature; one `test()` per IR.
-- Title each test with its `testId`, e.g. `test('TC-002 Login fails ...')`.
-- Map every IR `expected` entry to **at least one `expect()`**. This is
-  mandatory — a spec with no assertion for a stated expected result is invalid.
-- Translate `preconditions` into setup (a `beforeEach`, fixture, or opening
-  steps). Drive all interaction through Page Object methods.
+- Files in `tests/<feature>.spec.ts`; group related cases with `test.describe`.
+- One `test()` per IR, titled with its id first: `test('TC-002 Login fails with an invalid password', ...)`.
+  The validator finds the case by that id prefix.
+- Map every IR `expected` entry to **at least one `expect()` inside the test body**. A script with fewer
+  `expect()` calls than expected results is invalid.
+- Preconditions become setup (`test.beforeEach` or opening steps). Steps become Page Object calls.
+- Test data comes from the IR `testData` (and CSV); secrets via `process.env`.
+- Header comment: `Generated from IR: <ids> (source: <file>). Not run against an app.`
 
 ## Coding standards
+- Web-first assertions (`await expect(locator).toBeVisible()`), which auto-wait. **No `waitForTimeout`.**
+- Relative URLs only (`page.goto('/login')`).
+- Independent, idempotent tests.
+- Skip cases with `needsClarification: true`; do not write placeholder scripts for them.
 
-- Use web-first assertions (`await expect(locator).to...`) — they auto-retry.
-- **No** `page.waitForTimeout` / hard sleeps. Rely on auto-waiting and
-  assertion retry.
-- Prefer `getByRole` / `data-test` locators exposed by the Page Object.
-- Keep tests independent and idempotent (fresh login per test unless a fixture
-  provides `storageState`).
-
-## Gate before running
-
-Run `npx tsc --noEmit`. The spec must type-check (and lint, if configured)
-before it is executed. Fix type errors here, not in the heal loop.
+## Gate before validation
+Run `npx tsc --noEmit`. Fix type errors here, before `npm run validate`.

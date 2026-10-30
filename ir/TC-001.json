@@ -1,19 +1,24 @@
 {
   "testId": "TC-001",
-  "title": "Signed-in user lands on the dashboard",
+  "title": "Login succeeds with valid credentials",
   "source": "csv",
-  "app": "meiden",
+  "app": "app",
   "priority": "medium",
   "preconditions": [
-    "User has signed in with Microsoft SSO"
+    "User is on the login page"
   ],
   "steps": [
-    "Open the Dashboard page"
+    "Enter username",
+    "Enter password",
+    "Click Login"
   ],
-  "testData": {},
+  "testData": {
+    "username": "demo_user",
+    "password": "Passw0rd!"
+  },
   "expected": [
     {
-      "description": "The Dashboard heading and the Operational Analytics section are visible"
+      "description": "User is redirected to the products page and the product list is visible"
     }
   ],
   "tags": [],

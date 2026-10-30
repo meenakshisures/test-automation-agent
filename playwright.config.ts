@@ -4,47 +4,27 @@ import { defineConfig, devices } from '@playwright/test';
 try { process.loadEnvFile('.env'); } catch { /* no .env - rely on real environment variables */ }
 
 /**
- * Layer 5 (deterministic execution). Artifacts are captured on failure/retry so
- * the failure-analyzer skill has real evidence (trace, screenshot, video) to
- * diagnose from - not guesses. Retries here absorb genuine flakiness; the
- * agent's self-heal loop is a separate, code-level fixing step.
- *
- * Auth: the `setup` project signs in once through Microsoft SSO (incl. MFA) and
- * saves state to .auth/; the `chromium` project reuses it so specs start logged in.
- * Specs that test the login flow itself opt out with `test.use({ storageState: { cookies: [], origins: [] } })`.
+ * The agent generates specs from CSV test cases and validates them statically (see scripts/validate.mjs);
+ * it does not need a live app. If you later want to execute the specs, set BASE_URL in .env and run
+ * `npm test` - the specs use relative URLs, so they run against whatever BASE_URL points at.
  */
 export default defineConfig({
   testDir: './tests',
   outputDir: './artifacts',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 2 : undefined,
-  timeout: 60_000,
-  expect: { timeout: 10_000 },
+  retries: 0,
+  timeout: 30_000,
+  expect: { timeout: 7_000 },
 
-  reporter: [
-    ['list'],
-    ['html', { outputFolder: 'reports/html', open: 'never' }],
-    ['json', { outputFile: 'reports/results.json' }],
-    ['./scripts/md-reporter.mjs'], // -> reports/report.md
-  ],
+  reporter: [['list'], ['html', { outputFolder: 'reports/html', open: 'never' }]],
 
   use: {
-    baseURL: process.env.BASE_URL,
-    trace: 'retain-on-failure', // trace.zip for every failed attempt
-    screenshot: 'on', // evidence for passing cases too, not just failures
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10_000,
   },
 
-  projects: [
-    { name: 'setup', testMatch: /auth\.setup\.ts/ },
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'], storageState: '.auth/user.json' },
-      dependencies: ['setup'],
-      testIgnore: /auth\.setup\.ts/,
-    },
-  ],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 });

@@ -3,15 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "AI-driven Playwright test-automation agent (POC): prompt/CSV -> IR -> grounded specs -> run -> report.",
+  "description": "AI test-automation agent (POC): CSV/prompt test cases -> IR -> Playwright TypeScript scripts -> static validation -> report.",
   "scripts": {
     "parse": "node scripts/parse.mjs",
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
+    "validate": "node scripts/validate.mjs",
     "report": "node scripts/report.mjs",
-    "report:open": "playwright show-report reports/html",
     "agent": "node scripts/run.mjs",
-    "install:browsers": "playwright install chromium"
+    "test": "playwright test",
+    "test:list": "playwright test --list"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",

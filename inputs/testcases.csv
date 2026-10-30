@@ -1,7 +1,15 @@
 TestID,Title,Preconditions,Steps,Test Data,Expected Result
-TC-001,Signed-in user lands on the dashboard,User has signed in with Microsoft SSO,"1. Open the Dashboard page","","The Dashboard heading and the Operational Analytics section are visible"
-TC-002,Sidebar navigates to Production Orders,User is signed in on the dashboard,"1. Click 'Production Orders' in the sidebar","","The URL is /productionOrders and the 'All Production Orders' heading and orders table are visible"
-TC-003,Production Orders table shows the expected columns,User is signed in,"1. Open the Production Orders page","","The table shows columns Production Order, Breaker Type, Control Voltage, Current Rating, Customer, Created By, Status"
-TC-004,Look Up button is disabled until an order number is entered,User is signed in,"1. Open the Lookup page
-2. Observe the Look Up button
-3. Enter a 7-digit production order number","order=1234567","The Look Up button is disabled while the field is empty and becomes enabled after a 7-digit number is entered"
+TC-001,Login succeeds with valid credentials,User is on the login page,"1. Enter username
+2. Enter password
+3. Click Login","username=demo_user; password=Passw0rd!",User is redirected to the products page and the product list is visible
+TC-002,Login fails with an invalid password,User is on the login page,"1. Enter a valid username
+2. Enter an invalid password
+3. Click Login","username=demo_user; password=wrong_password","An error message 'Invalid username or password' is displayed; The user stays on the login page"
+TC-003,Login with an empty username shows a validation error,User is on the login page,"1. Leave the username empty
+2. Enter a password
+3. Click Login",password=Passw0rd!,An error message 'Username is required' is displayed
+TC-004,Adding an item updates the cart badge,User is logged in and on the products page,"1. Click 'Add to cart' on the Backpack
+2. Observe the cart icon",item=Backpack,The cart badge shows 1
+TC-005,Searching filters the product list,User is logged in and on the products page,"1. Type 'bike' in the search box
+2. Press Enter",query=bike,"Only products whose name contains 'bike' are listed; The result count text is visible"
+TC-006,Checkout works,User has items in the cart,"1. Go to checkout",,It works
